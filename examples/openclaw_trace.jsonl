@@ -1,0 +1,5 @@
+{"session_id":"session-42","agent":"openclaw","ts":"2026-04-13T22:01:00Z","event":"user_request","source":"discord","message":"Fix the PR"}
+{"session_id":"session-42","agent":"openclaw","ts":"2026-04-13T22:01:02Z","event":"tool_call","source":"github","tool":"gh pr checks","target":"skylos#198"}
+{"session_id":"session-42","agent":"openclaw","ts":"2026-04-13T22:01:04Z","event":"tool_result","source":"github","status":"failure","message":"Validate PR Title failed"}
+{"session_id":"session-42","agent":"openclaw","ts":"2026-04-13T22:01:07Z","event":"command","source":"shell","command":"gh pr edit 198 --title 'chore(llm): relax litellm version cap'"}
+{"session_id":"session-42","agent":"openclaw","ts":"2026-04-13T22:01:10Z","event":"completion","source":"assistant","message":"Updated PR title to match semantic policy"}

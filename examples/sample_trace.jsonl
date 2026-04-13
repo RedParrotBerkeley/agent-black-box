@@ -1,0 +1,5 @@
+{"run_id":"run-001","agent":"openclaw","session_id":"sess-123","ts":"2026-04-13T22:00:00Z","kind":"prompt","source":"assistant","message":"Fix the failing PR check"}
+{"run_id":"run-001","agent":"openclaw","session_id":"sess-123","ts":"2026-04-13T22:00:02Z","kind":"tool_call","source":"github","tool":"gh pr checks","name":"check-pr-status"}
+{"run_id":"run-001","agent":"openclaw","session_id":"sess-123","ts":"2026-04-13T22:00:03Z","kind":"tool_result","source":"github","status":"failure","message":"Validate PR Title failed"}
+{"run_id":"run-001","agent":"openclaw","session_id":"sess-123","ts":"2026-04-13T22:00:09Z","kind":"command","source":"shell","command":"gh pr edit 198 --title 'chore(llm): relax litellm version cap'"}
+{"run_id":"run-001","agent":"openclaw","session_id":"sess-123","ts":"2026-04-13T22:00:13Z","kind":"completion","source":"assistant","message":"Renamed PR to satisfy semantic title policy"}
