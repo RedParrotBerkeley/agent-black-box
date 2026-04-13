@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from agent_black_box.adapters import parse_trace
+from agent_black_box.banner import render_banner
 from agent_black_box.diffing import diff_runs
 from agent_black_box.filtering import filter_run
 from agent_black_box.redaction import redact_run
@@ -20,6 +21,7 @@ def build_parser() -> argparse.ArgumentParser:
     timeline_cmd.add_argument("--format", default="jsonl", choices=["jsonl", "openclaw-jsonl"], help="Trace source format")
     timeline_cmd.add_argument("--kind", action="append", dest="kinds", help="Filter to specific event kind, repeatable")
     timeline_cmd.add_argument("--redact", action="store_true", help="Redact common secret fields")
+    timeline_cmd.add_argument("--banner", action="store_true", help="Render demo banner before output")
     timeline_cmd.add_argument("--output", help="Write output to a file")
 
     diff_cmd = sub.add_parser("diff", help="Compare two trace files")
@@ -32,8 +34,10 @@ def build_parser() -> argparse.ArgumentParser:
     summary_cmd.add_argument("--format", default="jsonl", choices=["jsonl", "openclaw-jsonl"], help="Trace source format")
     summary_cmd.add_argument("--kind", action="append", dest="kinds", help="Filter to specific event kind, repeatable")
     summary_cmd.add_argument("--redact", action="store_true", help="Redact common secret fields")
+    summary_cmd.add_argument("--banner", action="store_true", help="Render demo banner before output")
     summary_cmd.add_argument("--output", help="Write output to a file")
 
+    diff_cmd.add_argument("--banner", action="store_true", help="Render demo banner before output")
     diff_cmd.add_argument("--output", help="Write output to a file")
 
     return parser
@@ -50,14 +54,14 @@ def main() -> int:
         run = filter_run(run, args.kinds)
         if args.redact:
             run = redact_run(run)
-        output = render_timeline(run)
+        output = _maybe_banner(render_timeline(run), args.banner)
         _emit(output, args.output)
         return 0
 
     if args.command == "diff":
         left = parse_trace(args.left, source_format=args.format)
         right = parse_trace(args.right, source_format=args.format)
-        output = diff_runs(left, right)
+        output = _maybe_banner(diff_runs(left, right), args.banner)
         _emit(output, args.output)
         return 0
 
@@ -66,12 +70,18 @@ def main() -> int:
         run = filter_run(run, args.kinds)
         if args.redact:
             run = redact_run(run)
-        output = render_incident_summary(run)
+        output = _maybe_banner(render_incident_summary(run), args.banner)
         _emit(output, args.output)
         return 0
 
     parser.error("unknown command")
     return 2
+
+
+def _maybe_banner(text: str, enabled: bool) -> str:
+    if not enabled:
+        return text
+    return render_banner() + "\n" + text
 
 
 def _emit(text: str, output_path: str | None) -> None:

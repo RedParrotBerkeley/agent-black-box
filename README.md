@@ -2,6 +2,8 @@
 
 **Flight recorder, replay, diff, and incident reporting for AI agent runs.**
 
+![Agent Black Box demo](assets/demo.gif)
+
 Agent Black Box helps you understand what an AI agent actually did, where it failed, and what changed between runs.
 
 It is built for people working with coding agents, tool-using assistants, MCP workflows, shell-executing automations, and long-running agent sessions that are too powerful to debug with plain chat transcripts.
@@ -40,7 +42,7 @@ Current MVP features:
 ### Timeline
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli timeline examples/sample_trace.jsonl --redact
+PYTHONPATH=src python -m agent_black_box.cli timeline examples/sample_trace.jsonl --redact --banner
 ```
 
 ### Diff two runs
