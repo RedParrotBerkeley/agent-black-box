@@ -16,6 +16,7 @@
       --accent-2: #a78bfa;
       --good: #86efac;
       --warn: #fbbf24;
+      --danger: #f87171;
     }
     * { box-sizing: border-box; }
     body {
@@ -58,14 +59,14 @@
     }
     h1 {
       margin: 0 0 10px;
-      font-size: 38px;
-      line-height: 1.05;
+      font-size: 40px;
+      line-height: 1.02;
     }
     .subtitle {
       color: var(--muted);
-      font-size: 16px;
-      max-width: 880px;
-      line-height: 1.55;
+      font-size: 17px;
+      max-width: 900px;
+      line-height: 1.6;
     }
     .grid {
       display: grid;
@@ -112,6 +113,35 @@
       font-size: 14px;
       line-height: 1.55;
     }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      border: 1px solid rgba(125,211,252,0.18);
+      background: rgba(12,18,34,0.55);
+      color: var(--text);
+    }
+    .badge-danger {
+      border-color: rgba(248,113,113,0.28);
+      background: rgba(248,113,113,0.10);
+      color: #ffd8d8;
+    }
+    .badge-good {
+      border-color: rgba(134,239,172,0.28);
+      background: rgba(134,239,172,0.10);
+      color: #dbffe8;
+    }
     .meta-strip {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -136,6 +166,30 @@
       font-weight: 600;
       color: var(--text);
     }
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .highlight-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(248,113,113,0.16);
+      background: linear-gradient(180deg, rgba(248,113,113,0.10), rgba(17,24,45,0.85));
+    }
+    .highlight-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ffb3b3;
+      margin-bottom: 6px;
+    }
+    .highlight-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff1f1;
+    }
     .footer {
       color: var(--muted);
       margin-top: 18px;
@@ -144,6 +198,7 @@
     @media (max-width: 980px) {
       .span-6 { grid-column: span 12; }
       .meta-strip { grid-template-columns: 1fr; }
+      .highlight-grid { grid-template-columns: 1fr; }
       h1 { font-size: 30px; }
     }
   </style>
@@ -155,6 +210,11 @@
       <h1>Agent Black Box Report · OpenClaw Mission Control Run</h1>
       <div class="subtitle">A static black-box report built from real OpenClaw demo artifacts, designed to be more legible and shareable than raw terminal output.</div>
       <div class="callout">Flight recorder for AI agent runs. This report is a local-first static artifact built from real run data and intended to be readable without digging through raw logs or chat transcripts.</div>
+      <div class="hero-badges">
+        <div class="badge badge-danger">Failure path visible</div>
+        <div class="badge">Static artifact</div>
+        <div class="badge badge-good">Shareable without raw logs</div>
+      </div>
       <div class="meta-strip">
         <div class="meta-box">
           <div class="meta-k">Surface</div>
@@ -167,6 +227,20 @@
         <div class="meta-box">
           <div class="meta-k">Built from</div>
           <div class="meta-v">Timeline, summary, focused diff</div>
+        </div>
+      </div>
+      <div class="highlight-grid">
+        <div class="highlight-box">
+          <div class="highlight-label">Operator question</div>
+          <div class="highlight-value">What failed?</div>
+        </div>
+        <div class="highlight-box">
+          <div class="highlight-label">Answer surfaced</div>
+          <div class="highlight-value">pytest returned exit code 1</div>
+        </div>
+        <div class="highlight-box">
+          <div class="highlight-label">Why this exists</div>
+          <div class="highlight-value">Turn agent runs into inspectable incidents</div>
         </div>
       </div>
     </section>

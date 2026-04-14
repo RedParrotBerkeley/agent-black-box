@@ -6,6 +6,11 @@
 
 Agent Black Box helps you understand what an AI agent actually did, where it failed, and what changed between runs.
 
+Best first artifacts:
+- `demo/openclaw-failure-report.html`
+- `demo/openclaw-real-report.html`
+- `assets/demo.gif`
+
 It is built for people working with coding agents, tool-using assistants, MCP workflows, shell-executing automations, and long-running agent sessions that are too powerful to debug with plain chat transcripts.
 
 ## Why this exists
