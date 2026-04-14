@@ -9,22 +9,28 @@ The pitch is: **debug, replay, diff, and audit AI agent behavior like a real sys
 
 ## Launch assets needed
 
+Minimum viable Show HN package:
 - README with a sharp top section and concrete CLI demo
-- one short terminal GIF showing timeline + diff + summary
-- one architecture image showing ingest -> normalize -> replay/diff/report
 - one realistic example trace from an agent workflow
+- one compact real-session snippet or screenshot
 - clear comparison against plain logs and chat transcripts
+- honest MVP scope language
+
+Nice-to-have assets after Show HN:
+- short terminal GIF showing timeline + diff + summary
+- architecture image showing ingest -> normalize -> replay/diff/report
 
 ## Suggested launch sequence
 
-1. Push public repo with clean README and examples
-2. Post demo GIF in repo README and social posts
-3. Submit to:
-   - Hacker News Show HN
+1. Push public repo with clean README and real runtime example
+2. Make sure the README snippet and demo artifacts match the current code exactly
+3. Submit to Hacker News Show HN with a grounded, skeptical-reader-friendly description
+4. After initial HN feedback, improve weak spots called out by commenters
+5. Then post to:
    - Reddit relevant dev/AI tooling communities
    - awesome MCP / agent tooling lists
    - GitHub discussions / Discord communities where agent builders hang out
-4. Follow up with a short technical write-up: "Why AI agents need black-box recorders"
+6. Follow up with a short technical write-up: "Why AI agents need black-box recorders"
 
 ## Messaging angles
 

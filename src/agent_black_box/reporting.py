@@ -4,7 +4,7 @@ from collections import Counter
 from typing import Any
 
 from agent_black_box.models import TraceRun
-from agent_black_box.timeline import _render_value
+from agent_black_box.timeline import COMPACT_SKIP_EVENT_KINDS, _render_value
 
 
 IMPORTANT_KINDS = {
@@ -23,7 +23,6 @@ IMPORTANT_KINDS = {
 def render_incident_summary(run: TraceRun, compact: bool = False) -> str:
     counts = Counter(event.kind for event in run.events)
     visible_key_events = [event for event in run.events if event.kind in IMPORTANT_KINDS]
-    omitted_thinking = counts.get("assistant_thinking", 0)
     lines = [
         f"# Incident Summary: {run.run_id}",
         "",
@@ -32,13 +31,18 @@ def render_incident_summary(run: TraceRun, compact: bool = False) -> str:
         f"- total events: {run.event_count}",
     ]
     if compact:
+        filtered_counts = Counter(event.kind for event in run.events if event.kind in COMPACT_SKIP_EVENT_KINDS)
         lines.extend([
             f"- key events: {len(visible_key_events)}",
-            f"- omitted assistant_thinking: {omitted_thinking}",
+            f"- omitted events: {sum(filtered_counts.values())}",
         ])
+        if filtered_counts:
+            detail = ", ".join(f"{kind}={count}" for kind, count in sorted(filtered_counts.items()))
+            lines.append(f"- omitted detail: {detail}")
     lines.extend(["", "## Event Counts"])
 
-    for kind, count in sorted(counts.items()):
+    event_count_items = sorted((counts.items() if not compact else ((kind, count) for kind, count in counts.items() if kind not in COMPACT_SKIP_EVENT_KINDS)))
+    for kind, count in event_count_items:
         lines.append(f"- {kind}: {count}")
 
     lines.extend(["", "## Key Events"])

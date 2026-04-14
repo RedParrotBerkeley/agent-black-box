@@ -15,3 +15,11 @@ Because traces can contain sensitive prompts, commands, paths, outputs, and secr
 ## Why not just use logs?
 
 Because most agent logs are incomplete, inconsistent, and hard to compare across runs. This project aims to normalize the run into something you can actually inspect.
+
+## Is this ready for production incident response?
+
+Not fully. It is an early local-first MVP that is already useful for inspection and sharing, but replay, stronger diff alignment, and deeper root-cause help are still ahead.
+
+## What real runtimes does it support today?
+
+Right now the strongest real-runtime story is OpenClaw session JSONL support. Generic JSONL traces are also supported.

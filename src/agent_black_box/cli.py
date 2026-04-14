@@ -39,7 +39,8 @@ def build_parser() -> argparse.ArgumentParser:
     summary_cmd.add_argument("--banner", action="store_true", help="Render demo banner before output")
     summary_cmd.add_argument("--output", help="Write output to a file")
 
-    diff_cmd.add_argument("--compact", action="store_true", help="Reserved for compact diff behavior on noisy real traces")
+    diff_cmd.add_argument("--compact", action="store_true", help="Enable compact diff behavior on noisy real traces")
+    diff_cmd.add_argument("--focus", action="store_true", help="Render a focused diff summary instead of raw event-by-event output")
     diff_cmd.add_argument("--banner", action="store_true", help="Render demo banner before output")
     diff_cmd.add_argument("--output", help="Write output to a file")
 
@@ -64,7 +65,7 @@ def main() -> int:
     if args.command == "diff":
         left = parse_trace(args.left, source_format=args.format)
         right = parse_trace(args.right, source_format=args.format)
-        output = _maybe_banner(diff_runs(left, right, compact=args.compact), args.banner)
+        output = _maybe_banner(diff_runs(left, right, compact=args.compact, focus=args.focus), args.banner)
         _emit(output, args.output)
         return 0
 

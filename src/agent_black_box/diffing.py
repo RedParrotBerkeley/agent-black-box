@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any
 
 from agent_black_box.models import TraceRun
@@ -9,11 +10,16 @@ from agent_black_box.timeline import _render_value
 PREFERRED_DIFF_KEYS = ["tool", "tool_call_id", "arguments", "command", "path", "status", "is_error", "message", "content", "details", "name"]
 COMPACT_SKIP_EVENT_KINDS = {"assistant_thinking", "session_start", "model_change", "thinking_level_change", "model-snapshot"}
 COMPACT_IGNORE_DATA_KEYS = {"tool_call_id", "message_id", "parent_id", "id", "parentId", "responseId", "timestamp"}
+IMPORTANT_FOCUS_KINDS = {"prompt", "tool_call", "tool_result", "assistant_message", "failure", "warning", "command", "completion"}
 
 
-def diff_runs(left: TraceRun, right: TraceRun, compact: bool = False) -> str:
+def diff_runs(left: TraceRun, right: TraceRun, compact: bool = False, focus: bool = False) -> str:
     left_events = [event for event in left.events if not compact or event.kind not in COMPACT_SKIP_EVENT_KINDS]
     right_events = [event for event in right.events if not compact or event.kind not in COMPACT_SKIP_EVENT_KINDS]
+
+    if focus:
+        return _render_focused_diff(left, right, left_events, right_events, compact=compact)
+
     left_label = f"{len(left_events)} visible events, {left.event_count} total" if compact else f"{left.event_count} events"
     right_label = f"{len(right_events)} visible events, {right.event_count} total" if compact else f"{right.event_count} events"
     lines = [
@@ -55,6 +61,96 @@ def diff_runs(left: TraceRun, right: TraceRun, compact: bool = False) -> str:
     ]
 
     return "\n".join(summary + [""] + lines).rstrip()
+
+
+def _render_focused_diff(left: TraceRun, right: TraceRun, left_events, right_events, compact: bool) -> str:
+    left_prompt = next((event for event in left_events if event.kind == "prompt"), None)
+    right_prompt = next((event for event in right_events if event.kind == "prompt"), None)
+    left_tools = Counter(event.data.get("tool") for event in left_events if event.kind == "tool_call" and event.data.get("tool"))
+    right_tools = Counter(event.data.get("tool") for event in right_events if event.kind == "tool_call" and event.data.get("tool"))
+    left_focus = [event for event in left_events if event.kind in IMPORTANT_FOCUS_KINDS]
+    right_focus = [event for event in right_events if event.kind in IMPORTANT_FOCUS_KINDS]
+
+    lines = [
+        "focused run diff",
+        f"- left: {left.run_id}",
+        f"- right: {right.run_id}",
+        "",
+        "summary:",
+        f"- left visible events: {len(left_events)}",
+        f"- right visible events: {len(right_events)}",
+        f"- left focus events: {len(left_focus)}",
+        f"- right focus events: {len(right_focus)}",
+    ]
+
+    same_prompt = _normalized_prompt_text(left_prompt) == _normalized_prompt_text(right_prompt)
+    lines.append(f"- prompt match: {'yes' if same_prompt else 'no'}")
+
+    shared_tools = sorted(set(left_tools) & set(right_tools))
+    left_only_tools = sorted(set(left_tools) - set(right_tools))
+    right_only_tools = sorted(set(right_tools) - set(left_tools))
+    lines.append(f"- shared tools: {', '.join(shared_tools) if shared_tools else 'none'}")
+    if left_only_tools:
+        lines.append(f"- left-only tools: {', '.join(left_only_tools)}")
+    if right_only_tools:
+        lines.append(f"- right-only tools: {', '.join(right_only_tools)}")
+
+    lines.extend(["", "key differences:"])
+    for bullet in _focused_bullets(left_events, right_events):
+        lines.append(f"- {bullet}")
+
+    lines.extend(["", "focus event preview:"])
+    for label, events in [("left", left_focus[:6]), ("right", right_focus[:6])]:
+        lines.append(f"- {label}:")
+        for event in events:
+            lines.append(f"  - {_format_event(event, compact=compact)}")
+
+    return "\n".join(lines).rstrip()
+
+
+def _focused_bullets(left_events, right_events) -> list[str]:
+    bullets: list[str] = []
+
+    left_message_edit = any(event.kind == "tool_call" and event.data.get("tool") == "message" for event in left_events)
+    right_message_edit = any(event.kind == "tool_call" and event.data.get("tool") == "message" for event in right_events)
+    if left_message_edit and right_message_edit:
+        bullets.append("both runs reach a Discord message edit step")
+    elif left_message_edit or right_message_edit:
+        bullets.append("only one run reaches a Discord message edit step")
+
+    left_failures = [event for event in left_events if event.data.get("is_error") is True or event.kind == "failure"]
+    right_failures = [event for event in right_events if event.data.get("is_error") is True or event.kind == "failure"]
+    if right_failures and not left_failures:
+        bullets.append("right run includes an error path that does not appear in the left run")
+    elif left_failures and not right_failures:
+        bullets.append("left run includes an error path that does not appear in the right run")
+
+    if len(right_events) > len(left_events):
+        bullets.append(f"right run explores more steps before completion ({len(right_events)} vs {len(left_events)})")
+    elif len(left_events) > len(right_events):
+        bullets.append(f"left run explores more steps before completion ({len(left_events)} vs {len(right_events)})")
+
+    left_tools = Counter(event.data.get("tool") for event in left_events if event.kind == "tool_call" and event.data.get("tool"))
+    right_tools = Counter(event.data.get("tool") for event in right_events if event.kind == "tool_call" and event.data.get("tool"))
+    for tool in sorted(set(left_tools) | set(right_tools)):
+        if left_tools[tool] != right_tools[tool]:
+            bullets.append(f"tool usage differs for {tool} ({left_tools[tool]} vs {right_tools[tool]})")
+
+    return bullets or ["no focused differences detected"]
+
+
+def _prompt_text(event) -> str | None:
+    if event is None:
+        return None
+    return event.data.get("message") or event.data.get("content")
+
+
+def _normalized_prompt_text(event) -> str | None:
+    text = _prompt_text(event)
+    if text is None:
+        return None
+    lines = [line.rstrip() for line in str(text).splitlines() if not line.startswith("Current time:")]
+    return "\n".join(lines).strip()
 
 
 def _difference_label(left_event, right_event) -> str:

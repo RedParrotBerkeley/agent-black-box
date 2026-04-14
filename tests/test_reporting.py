@@ -63,6 +63,10 @@ def test_render_incident_summary_compact_adds_compact_metadata(tmp_path):
     compact = render_incident_summary(run, compact=True)
 
     assert "- key events:" not in full
-    assert "- omitted assistant_thinking:" not in full
+    assert "- omitted events:" not in full
+    assert "- omitted detail:" not in full
     assert "- key events:" in compact
-    assert "- omitted assistant_thinking: 1" in compact
+    assert "- omitted events: 2" in compact
+    assert "- omitted detail: assistant_thinking=1, session_start=1" in compact
+    assert "- assistant_thinking:" not in compact
+    assert "- session_start:" not in compact

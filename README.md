@@ -31,7 +31,7 @@ Current MVP features:
 - ingest generic JSONL traces
 - ingest real OpenClaw session JSONL traces and legacy OpenClaw-style example JSONL
 - render a timeline of a run
-- diff two runs at the event level
+- compare runs with raw event diff or focused diff summary modes
 - export an incident-style markdown summary
 - filter events by kind
 - redact common secret-bearing fields
@@ -51,6 +51,7 @@ PYTHONPATH=src python -m agent_black_box.cli timeline examples/sample_trace.json
 
 ```bash
 PYTHONPATH=src python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl
+PYTHONPATH=src python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl --focus
 ```
 
 ### Export incident summary
@@ -68,8 +69,9 @@ PYTHONPATH=src python -m agent_black_box.cli timeline examples/openclaw_trace.js
 ### Parse a real OpenClaw session
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl
-PYTHONPATH=src python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --output incident.md
+PYTHONPATH=src python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact
+PYTHONPATH=src python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact --output incident.md
+PYTHONPATH=src python -m agent_black_box.cli diff ~/.openclaw/agents/main/sessions/<run-a>.jsonl ~/.openclaw/agents/main/sessions/<run-b>.jsonl --format openclaw-jsonl --compact --focus
 ```
 
 ## Real OpenClaw example
@@ -105,7 +107,8 @@ Full generated demo artifacts live in `demo/`:
 Recommended artifact order for demos:
 - show `demo/openclaw-real-timeline.md` first
 - use `demo/openclaw-real-summary.md` as the credibility follow-up
-- keep `demo/openclaw-real-diff.md` as a technical appendix until diff alignment improves
+- use `demo/openclaw-real-diff.md` in focused mode for run-comparison storytelling
+- keep raw event-by-event diffing as a technical appendix until alignment improves
 
 ## Example output
 
@@ -202,9 +205,8 @@ See:
 
 This is an early MVP being shaped into a public open source release.
 
-It already has a real CLI and a real trace model, and it now supports real OpenClaw session traces, but the strongest next steps are:
-- better diffing and event alignment
-- compact and focus modes for noisy real traces
+It already has a real CLI and a real trace model, and it now supports real OpenClaw session traces, compact views, and focused diff summaries, but the strongest next steps are:
+- better diff alignment and first-bad-step detection
 - replay support
 - root-cause hints
 - a web UI

@@ -78,6 +78,74 @@ def test_diff_runs_handles_openclaw_nested_tool_data(tmp_path):
     assert "tool_call_id=tc1" in rendered
 
 
+def test_diff_runs_focus_produces_high_level_summary(tmp_path):
+    left_path = tmp_path / "left-openclaw.jsonl"
+    right_path = tmp_path / "right-openclaw.jsonl"
+
+    left_path.write_text(
+        '\n'.join(
+            [
+                '{"type":"session","version":3,"id":"sess-left","timestamp":"2026-04-14T12:00:00Z","cwd":"/tmp/project"}',
+                '{"type":"message","id":"u1","timestamp":"2026-04-14T12:00:01Z","message":{"role":"user","content":[{"type":"text","text":"update the status message"}]}}',
+                '{"type":"message","id":"a1","timestamp":"2026-04-14T12:00:02Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"tc1","name":"message","arguments":{"action":"edit"}}],"stopReason":"toolUse"}}',
+            ]
+        )
+        + '\n'
+    )
+    right_path.write_text(
+        '\n'.join(
+            [
+                '{"type":"session","version":3,"id":"sess-right","timestamp":"2026-04-14T12:00:00Z","cwd":"/tmp/project"}',
+                '{"type":"message","id":"u1","timestamp":"2026-04-14T12:00:01Z","message":{"role":"user","content":[{"type":"text","text":"update the status message"}]}}',
+                '{"type":"message","id":"a1","timestamp":"2026-04-14T12:00:02Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"tc1","name":"exec","arguments":{"command":"rg something"}}],"stopReason":"toolUse"}}',
+                '{"type":"message","id":"t1","timestamp":"2026-04-14T12:00:03Z","message":{"role":"toolResult","toolCallId":"tc1","toolName":"exec","content":[{"type":"text","text":"command failed"}],"details":{"exitCode":1},"isError":true}}',
+                '{"type":"message","id":"a2","timestamp":"2026-04-14T12:00:04Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"tc2","name":"message","arguments":{"action":"edit"}}],"stopReason":"toolUse"}}',
+            ]
+        )
+        + '\n'
+    )
+
+    left = parse_trace(left_path, source_format="openclaw-jsonl")
+    right = parse_trace(right_path, source_format="openclaw-jsonl")
+    rendered = diff_runs(left, right, compact=True, focus=True)
+
+    assert "focused run diff" in rendered
+    assert "prompt match: yes" in rendered
+    assert "both runs reach a Discord message edit step" in rendered
+    assert "right run includes an error path that does not appear in the left run" in rendered
+    assert "tool usage differs for exec (0 vs 1)" in rendered
+
+
+def test_diff_runs_focus_normalizes_current_time_in_prompt(tmp_path):
+    left_path = tmp_path / "left-openclaw.jsonl"
+    right_path = tmp_path / "right-openclaw.jsonl"
+
+    left_path.write_text(
+        '\n'.join(
+            [
+                '{"type":"session","version":3,"id":"sess-left","timestamp":"2026-04-14T12:00:00Z","cwd":"/tmp/project"}',
+                '{"type":"message","id":"u1","timestamp":"2026-04-14T12:00:01Z","message":{"role":"user","content":[{"type":"text","text":"Do the thing\\nCurrent time: 12:00 UTC"}]}}',
+            ]
+        )
+        + '\n'
+    )
+    right_path.write_text(
+        '\n'.join(
+            [
+                '{"type":"session","version":3,"id":"sess-right","timestamp":"2026-04-14T12:05:00Z","cwd":"/tmp/project"}',
+                '{"type":"message","id":"u2","timestamp":"2026-04-14T12:05:01Z","message":{"role":"user","content":[{"type":"text","text":"Do the thing\\nCurrent time: 12:05 UTC"}]}}',
+            ]
+        )
+        + '\n'
+    )
+
+    left = parse_trace(left_path, source_format="openclaw-jsonl")
+    right = parse_trace(right_path, source_format="openclaw-jsonl")
+    rendered = diff_runs(left, right, compact=True, focus=True)
+
+    assert "prompt match: yes" in rendered
+
+
 def test_diff_runs_compact_ignores_timestamp_only_changes(tmp_path):
     left_path = tmp_path / "left-openclaw.jsonl"
     right_path = tmp_path / "right-openclaw.jsonl"

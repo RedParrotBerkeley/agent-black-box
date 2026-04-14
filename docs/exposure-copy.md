@@ -32,16 +32,29 @@ The goal is simple: make agent debugging feel more like systems debugging and le
 
 ## Show HN draft
 
-Show HN: Agent Black Box, a flight recorder for AI agent runs
+Show HN: Agent Black Box, a local-first flight recorder for AI agent runs
 
-I built Agent Black Box to answer a problem I kept running into with coding agents and tool-using assistants: when a run goes wrong, plain logs and chat transcripts usually do a poor job explaining what actually happened.
+I built Agent Black Box because I got tired of debugging agent failures through chat transcripts and scattered logs.
 
-The project is a local-first trace ingestor and CLI that can currently:
-- ingest JSONL traces
-- normalize events
-- render a timeline
-- diff two runs
-- export an incident summary
-- ingest real OpenClaw session traces
+When a coding agent or tool-using assistant goes off the rails, the question usually is not just "did it fail?". The real question is "what actually happened, in what order, and what changed between this run and the last one?"
 
-The longer-term goal is replay, smarter diffing for noisy real runs, root-cause hints, and adapters for more agent runtimes.
+Agent Black Box is an open source local-first CLI that ingests runtime traces, normalizes them, and turns them into something inspectable:
+- readable timelines
+- focused run diffs
+- incident-style summaries
+- redacted artifacts you can share
+
+Right now the MVP supports:
+- generic JSONL traces
+- real OpenClaw session JSONL traces
+- legacy OpenClaw-style example traces
+- timeline rendering
+- incident summary export
+- event-level diffing
+- basic redaction
+
+The newest step was adding support for real OpenClaw sessions instead of just toy example traces, plus compact and focused views so noisy real runs are easier to read.
+
+I do not think the project is finished. Raw event diffing still needs better alignment for messy real-world runs, and replay/root-cause features are still ahead. But it is now at the point where it feels useful instead of hypothetical.
+
+If you work on coding agents, MCP/tool-using assistants, or long-running agent workflows, I would love to know what trace/debugging features you wish existed.

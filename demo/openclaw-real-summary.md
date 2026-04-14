@@ -4,16 +4,12 @@
 - session_id: 5522c802-eade-41d5-b67c-0179806b11bf
 - total events: 23
 - key events: 16
-- omitted assistant_thinking: 3
+- omitted events: 7
+- omitted detail: assistant_thinking=3, model-snapshot=1, model_change=1, session_start=1, thinking_level_change=1
 
 ## Event Counts
 - assistant_message: 1
-- assistant_thinking: 3
-- model-snapshot: 1
-- model_change: 1
 - prompt: 1
-- session_start: 1
-- thinking_level_change: 1
 - tool_call: 7
 - tool_result: 7
 
