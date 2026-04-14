@@ -29,7 +29,7 @@ Agent Black Box is meant to be the missing operational layer.
 
 Current MVP features:
 - ingest generic JSONL traces
-- ingest OpenClaw-style JSONL traces
+- ingest real OpenClaw session JSONL traces and legacy OpenClaw-style example JSONL
 - render a timeline of a run
 - diff two runs at the event level
 - export an incident-style markdown summary
@@ -38,6 +38,8 @@ Current MVP features:
 - write output to files for sharing
 
 ## Quick demo
+
+If you only look at one thing, look at the real OpenClaw example below. That is the closest thing to the product's actual wedge right now.
 
 ### Timeline
 
@@ -63,6 +65,48 @@ PYTHONPATH=src python -m agent_black_box.cli summary examples/sample_trace.jsonl
 PYTHONPATH=src python -m agent_black_box.cli timeline examples/openclaw_trace.jsonl --format openclaw-jsonl
 ```
 
+### Parse a real OpenClaw session
+
+```bash
+PYTHONPATH=src python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl
+PYTHONPATH=src python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --output incident.md
+```
+
+## Real OpenClaw example
+
+Below is a compact real-session excerpt from an OpenClaw run that inspected cron state and then edited a Discord status message.
+
+You can also view the same excerpt in `assets/openclaw-real-snippet.txt` for easy screenshotting or terminal-demo capture.
+
+```text
+run_id: 5522c802-eade-41d5-b67c-0179806b11bf
+agent: openclaw
+session_id: 5522c802-eade-41d5-b67c-0179806b11bf
+events: 23
+visible_events: 16
+
+timeline:
+01. [2026-04-14T12:34:45.292Z] prompt (user)  | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message...
+02. [2026-04-14T12:34:50.738Z] tool_call (assistant)  | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
+03. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=cron, arguments={action=list}
+04. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=sessions_list, arguments={activeMinutes=180, limit=100, messageLimit=1}
+05. [2026-04-14T12:35:16.023Z] tool_call (assistant)  | tool=message, arguments={action=edit, messageId=1492611694000734368, to=channel:1492607333183000789}
+06. [2026-04-14T12:35:16.293Z] tool_result (message)  | tool=message, is_error=False, details={ok=True}
+07. [2026-04-14T12:35:22.511Z] assistant_message (assistant)  | message=NO_REPLY
+
+omitted_events: 7 (assistant_thinking=3, model-snapshot=1, model_change=1, session_start=1, thinking_level_change=1)
+```
+
+Full generated demo artifacts live in `demo/`:
+- `demo/openclaw-real-timeline.md`
+- `demo/openclaw-real-summary.md`
+- `demo/openclaw-real-diff.md`
+
+Recommended artifact order for demos:
+- show `demo/openclaw-real-timeline.md` first
+- use `demo/openclaw-real-summary.md` as the credibility follow-up
+- keep `demo/openclaw-real-diff.md` as a technical appendix until diff alignment improves
+
 ## Example output
 
 ```text
@@ -87,6 +131,7 @@ It is designed to:
 - compare runs side by side
 - export incident-friendly summaries
 - support redacted sharing
+- make real agent sessions legible enough to demo and debug
 
 ## What It Is Not
 
@@ -157,9 +202,9 @@ See:
 
 This is an early MVP being shaped into a public open source release.
 
-It already has a real CLI and a real trace model, but the strongest next steps are:
-- richer adapters for real runtimes
-- better diffing
+It already has a real CLI and a real trace model, and it now supports real OpenClaw session traces, but the strongest next steps are:
+- better diffing and event alignment
+- compact and focus modes for noisy real traces
 - replay support
 - root-cause hints
 - a web UI

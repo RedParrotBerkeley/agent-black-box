@@ -22,7 +22,7 @@ Instead of treating agent failures like mysterious chat glitches, it captures no
 
 Current MVP supports:
 - JSONL traces
-- OpenClaw-style traces
+- real OpenClaw session traces and legacy OpenClaw-style traces
 - timeline rendering
 - run diffing
 - incident summary export
@@ -42,6 +42,6 @@ The project is a local-first trace ingestor and CLI that can currently:
 - render a timeline
 - diff two runs
 - export an incident summary
-- ingest an OpenClaw-flavored trace format
+- ingest real OpenClaw session traces
 
-The longer-term goal is replay, root-cause hints, and adapters for more agent runtimes.
+The longer-term goal is replay, smarter diffing for noisy real runs, root-cause hints, and adapters for more agent runtimes.
