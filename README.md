@@ -43,10 +43,11 @@ If you only look at one thing, look at the HTML report and the real OpenClaw exa
 
 ## Flagship artifact
 
-The most product-like demo surface right now is the static HTML report:
+The most product-like demo surfaces right now are the static HTML reports:
 - `demo/openclaw-real-report.html`
+- `demo/openclaw-failure-report.html`
 
-It packages the timeline, incident summary, and focused diff into one dark, shareable artifact that is easier to scan than raw terminal output.
+The real-run report shows a full operational OpenClaw session. The failure report is the more dramatic artifact: a compact black-box record of an agent hitting a failing `pytest` run and surfacing the error path cleanly.
 
 ### Timeline
 
@@ -109,14 +110,17 @@ filtered: 7 event(s) (assistant_thinking=3, model-snapshot=1, model_change=1, se
 
 Full generated demo artifacts live in `demo/`:
 - `demo/openclaw-real-report.html`
+- `demo/openclaw-failure-report.html`
 - `demo/openclaw-real-timeline.md`
 - `demo/openclaw-real-summary.md`
 - `demo/openclaw-real-diff.md`
+- `demo/openclaw-failure-timeline.md`
+- `demo/openclaw-failure-summary.md`
 
 Recommended artifact order for demos:
-- show `demo/openclaw-real-report.html` first
+- show `demo/openclaw-failure-report.html` first for immediate legibility
+- use `demo/openclaw-real-report.html` next to prove this works on a richer real run
 - use `demo/openclaw-real-timeline.md` as the terminal credibility follow-up
-- use `demo/openclaw-real-summary.md` for compact incident framing
 - use `demo/openclaw-real-diff.md` in focused mode for run-comparison storytelling
 - keep raw event-by-event diffing as a technical appendix until alignment improves
 

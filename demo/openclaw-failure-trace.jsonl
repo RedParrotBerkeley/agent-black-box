@@ -1,0 +1,6 @@
+{"type":"session","version":3,"id":"sess-failure-demo","timestamp":"2026-04-14T12:00:00Z","cwd":"/tmp/project"}
+{"type":"model_change","id":"m1","parentId":null,"timestamp":"2026-04-14T12:00:00Z","provider":"openai-codex","modelId":"gpt-5.4"}
+{"type":"message","id":"u1","parentId":"m1","timestamp":"2026-04-14T12:00:01Z","message":{"role":"user","content":[{"type":"text","text":"Fix the failing PR"}]}}
+{"type":"message","id":"a1","parentId":"u1","timestamp":"2026-04-14T12:00:02Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"tc1","name":"exec","arguments":{"command":"pytest -q"}}],"stopReason":"toolUse"}}
+{"type":"message","id":"t1","parentId":"a1","timestamp":"2026-04-14T12:00:03Z","message":{"role":"toolResult","toolCallId":"tc1","toolName":"exec","content":[{"type":"text","text":"tests failed"}],"details":{"exitCode":1},"isError":true}}
+{"type":"message","id":"a2","parentId":"t1","timestamp":"2026-04-14T12:00:04Z","message":{"role":"assistant","content":[{"type":"text","text":"Pytest failed on one assertion"}],"stopReason":"endTurn"}}
