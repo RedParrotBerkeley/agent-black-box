@@ -1,0 +1,201 @@
+from __future__ import annotations
+
+from html import escape
+
+
+def render_html_report(*, title: str, subtitle: str, timeline: str, summary: str, diff: str) -> str:
+    return f"""<!doctype html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"utf-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+  <title>{escape(title)}</title>
+  <style>
+    :root {{
+      --bg: #0b1020;
+      --panel: #11182d;
+      --panel-2: #0f1527;
+      --text: #e8edf7;
+      --muted: #9fb0d1;
+      --line: #24304d;
+      --accent: #7dd3fc;
+      --accent-2: #a78bfa;
+      --good: #86efac;
+      --warn: #fbbf24;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+      background: radial-gradient(circle at top, #121a31 0%, var(--bg) 45%);
+      color: var(--text);
+    }}
+    .wrap {{
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }}
+    .hero {{
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(125,211,252,0.08), rgba(167,139,250,0.04));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      margin-bottom: 22px;
+    }}
+    .hero::after {{
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(125,211,252,0.18), rgba(125,211,252,0));
+      pointer-events: none;
+    }}
+    .eyebrow {{
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }}
+    h1 {{
+      margin: 0 0 10px;
+      font-size: 38px;
+      line-height: 1.05;
+    }}
+    .subtitle {{
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 880px;
+      line-height: 1.55;
+    }}
+    .grid {{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }}
+    .card {{
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    }}
+    .span-12 {{ grid-column: span 12; }}
+    .span-6 {{ grid-column: span 6; }}
+    .section-label {{
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(125,211,252,0.12);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }}
+    pre {{
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #e6edf9;
+    }}
+    .callout {{
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(134,239,172,0.2);
+      border-radius: 14px;
+      background: rgba(134,239,172,0.06);
+      color: #d9ffe5;
+      font-size: 14px;
+      line-height: 1.55;
+    }}
+    .meta-strip {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 0;
+    }}
+    .meta-box {{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(125,211,252,0.14);
+      background: rgba(12,18,34,0.45);
+    }}
+    .meta-k {{
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }}
+    .meta-v {{
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }}
+    .footer {{
+      color: var(--muted);
+      margin-top: 18px;
+      font-size: 13px;
+    }}
+    @media (max-width: 980px) {{
+      .span-6 {{ grid-column: span 12; }}
+      .meta-strip {{ grid-template-columns: 1fr; }}
+      h1 {{ font-size: 30px; }}
+    }}
+  </style>
+</head>
+<body>
+  <div class=\"wrap\">
+    <section class=\"hero\">
+      <div class=\"eyebrow\">Agent Black Box</div>
+      <h1>{escape(title)}</h1>
+      <div class=\"subtitle\">{escape(subtitle)}</div>
+      <div class=\"callout\">Flight recorder for AI agent runs. This report is a local-first static artifact built from real run data and intended to be readable without digging through raw logs or chat transcripts.</div>
+      <div class=\"meta-strip\">
+        <div class=\"meta-box\">
+          <div class=\"meta-k\">Surface</div>
+          <div class=\"meta-v\">Static HTML black-box report</div>
+        </div>
+        <div class=\"meta-box\">
+          <div class=\"meta-k\">Best use</div>
+          <div class=\"meta-v\">Shareability, screenshots, first impressions</div>
+        </div>
+        <div class=\"meta-box\">
+          <div class=\"meta-k\">Built from</div>
+          <div class=\"meta-v\">Timeline, summary, focused diff</div>
+        </div>
+      </div>
+    </section>
+
+    <section class=\"grid\">
+      <article class=\"card span-6\">
+        <div class=\"section-label\">Timeline</div>
+        <pre>{escape(timeline)}</pre>
+      </article>
+
+      <article class=\"card span-6\">
+        <div class=\"section-label\">Incident Summary</div>
+        <pre>{escape(summary)}</pre>
+      </article>
+
+      <article class=\"card span-12\">
+        <div class=\"section-label\">Focused Diff</div>
+        <pre>{escape(diff)}</pre>
+      </article>
+    </section>
+
+    <div class=\"footer\">Generated by Agent Black Box · local-first runtime forensics for AI agent runs</div>
+  </div>
+</body>
+</html>
+"""

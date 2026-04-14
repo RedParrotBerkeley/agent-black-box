@@ -39,7 +39,14 @@ Current MVP features:
 
 ## Quick demo
 
-If you only look at one thing, look at the real OpenClaw example below. That is the closest thing to the product's actual wedge right now.
+If you only look at one thing, look at the HTML report and the real OpenClaw example below. That is the closest thing to the product's actual wedge right now.
+
+## Flagship artifact
+
+The most product-like demo surface right now is the static HTML report:
+- `demo/openclaw-real-report.html`
+
+It packages the timeline, incident summary, and focused diff into one dark, shareable artifact that is easier to scan than raw terminal output.
 
 ### Timeline
 
@@ -101,13 +108,15 @@ filtered: 7 event(s) (assistant_thinking=3, model-snapshot=1, model_change=1, se
 ```
 
 Full generated demo artifacts live in `demo/`:
+- `demo/openclaw-real-report.html`
 - `demo/openclaw-real-timeline.md`
 - `demo/openclaw-real-summary.md`
 - `demo/openclaw-real-diff.md`
 
 Recommended artifact order for demos:
-- show `demo/openclaw-real-timeline.md` first
-- use `demo/openclaw-real-summary.md` as the credibility follow-up
+- show `demo/openclaw-real-report.html` first
+- use `demo/openclaw-real-timeline.md` as the terminal credibility follow-up
+- use `demo/openclaw-real-summary.md` for compact incident framing
 - use `demo/openclaw-real-diff.md` in focused mode for run-comparison storytelling
 - keep raw event-by-event diffing as a technical appendix until alignment improves
 
