@@ -88,46 +88,24 @@ PYTHONPATH=src python -m agent_black_box.cli diff ~/.openclaw/agents/main/sessio
 ./scripts/demo-gif-sequence.sh
 ```
 
-## Real OpenClaw example
+## OpenClaw support
 
-Below is a compact real-session excerpt from an OpenClaw run that inspected cron state and then edited a Discord status message.
+Agent Black Box supports both:
+- legacy OpenClaw-style example JSONL traces
+- real OpenClaw session JSONL traces
 
-You can also view the same excerpt in `assets/openclaw-real-snippet.txt` for easy screenshotting or terminal-demo capture.
+For public demo purposes, the cleanest artifact set is the failure-case path below because it is easier to share without exposing environment-specific operational details.
 
-```text
-run_id: 5522c802-eade-41d5-b67c-0179806b11bf
-agent: openclaw
-events: 16 shown / 23 total
-view: compact
-
-Timeline
---------
-01. [2026-04-14T12:34:45.292Z] prompt (user)  | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message...
-02. [2026-04-14T12:34:50.738Z] tool_call (assistant)  | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
-03. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=cron, arguments={action=list}
-04. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=sessions_list, arguments={activeMinutes=180, limit=100, messageLimit=1}
-05. [2026-04-14T12:35:16.023Z] tool_call (assistant)  | tool=message, arguments={action=edit, messageId=1492611694000734368, to=channel:1492607333183000789}
-06. [2026-04-14T12:35:16.293Z] tool_result (message)  | tool=message, is_error=False, details={ok=True}
-07. [2026-04-14T12:35:22.511Z] assistant_message (assistant)  | message=NO_REPLY
-
-filtered: 7 event(s) (assistant_thinking=3, model-snapshot=1, model_change=1, session_start=1, thinking_level_change=1)
-```
-
-Full generated demo artifacts live in `demo/`:
-- `demo/openclaw-real-report.html`
+Full generated public-safe demo artifacts live in `demo/`:
 - `demo/openclaw-failure-report.html`
-- `demo/openclaw-real-timeline.md`
-- `demo/openclaw-real-summary.md`
-- `demo/openclaw-real-diff.md`
 - `demo/openclaw-failure-timeline.md`
 - `demo/openclaw-failure-summary.md`
+- `demo/openclaw-failure-trace.jsonl`
 
 Recommended artifact order for demos:
 - show `demo/openclaw-failure-report.html` first for immediate legibility
-- use `demo/openclaw-real-report.html` next to prove this works on a richer real run
-- use `demo/openclaw-real-timeline.md` as the terminal credibility follow-up
-- use `demo/openclaw-real-diff.md` in focused mode for run-comparison storytelling
-- keep raw event-by-event diffing as a technical appendix until alignment improves
+- use `demo/openclaw-failure-timeline.md` as the terminal credibility follow-up
+- use `assets/demo.gif` only as supporting material
 
 ## Example output
 

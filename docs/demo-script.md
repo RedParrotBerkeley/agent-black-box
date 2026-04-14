@@ -14,23 +14,23 @@ Show three things, in this order:
 Play it live in the current terminal:
 
 ```bash
-cd /Users/mpatraw1ax3ckps/.openclaw/workspace/agent-black-box
+cd /path/to/agent-black-box
 ./scripts/demo-gif-sequence.sh play
 ```
 
 Record a fresh cast/GIF/PNG automatically:
 
 ```bash
-cd /Users/mpatraw1ax3ckps/.openclaw/workspace/agent-black-box
+cd /path/to/agent-black-box
 ./scripts/demo-gif-sequence.sh record
 ```
 
 ## Exact execution order inside the script
 
 ```bash
-agent-black-box timeline ~/.openclaw/agents/main/sessions/5522c802-eade-41d5-b67c-0179806b11bf.jsonl --format openclaw-jsonl --compact
-agent-black-box summary ~/.openclaw/agents/main/sessions/5522c802-eade-41d5-b67c-0179806b11bf.jsonl --format openclaw-jsonl --compact
-agent-black-box diff ~/.openclaw/agents/main/sessions/5522c802-eade-41d5-b67c-0179806b11bf.jsonl ~/.openclaw/agents/main/sessions/30572a54-78c4-4756-be4b-dfb18b1ccac5.jsonl --format openclaw-jsonl --compact --focus
+agent-black-box timeline demo/openclaw-failure-trace.jsonl --format openclaw-jsonl --compact
+agent-black-box summary demo/openclaw-failure-trace.jsonl --format openclaw-jsonl --compact
+agent-black-box report demo/openclaw-failure-trace.jsonl --format openclaw-jsonl --compact --output demo/openclaw-failure-report.html
 ```
 
 ## What to emphasize while recording
@@ -38,10 +38,10 @@ agent-black-box diff ~/.openclaw/agents/main/sessions/5522c802-eade-41d5-b67c-01
 ### Timeline
 
 Say or imply:
-- this is a real OpenClaw session, not a toy trace
+- this is an OpenClaw-shaped trace rendered through the real adapter path
 - compact mode starts at the meaningful user prompt
 - you can see tool calls and tool results in order
-- the run ends in a concrete external action, a Discord message edit
+- the run ends in a concrete failure explanation instead of vague transcript drift
 
 ### Summary
 
@@ -50,12 +50,12 @@ Say or imply:
 - setup noise is filtered out in compact mode
 - key events and counts are visible at a glance
 
-### Focused diff
+### Static report
 
 Say or imply:
-- this is the comparison view to demo first, not the raw event diff
-- the point is to explain how two runs differ operationally
-- for these runs, both reach the Discord edit step, but one explores more paths and uses extra tools
+- this is the shareable artifact for screenshots and async review
+- the point is to turn a run into something incident-like and easy to explain
+- the failure path is visible without digging through raw logs
 
 ## Recording behavior
 
@@ -78,6 +78,6 @@ When you run `./scripts/demo-gif-sequence.sh record`, it will:
 
 ## Current strongest artifact order
 
-1. `demo/openclaw-real-timeline.md`
-2. `demo/openclaw-real-summary.md`
-3. `demo/openclaw-real-diff.md`
+1. `demo/openclaw-failure-report.html`
+2. `demo/openclaw-failure-timeline.md`
+3. `assets/demo.gif`
