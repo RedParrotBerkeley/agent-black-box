@@ -24,28 +24,29 @@ def render_incident_summary(run: TraceRun, compact: bool = False) -> str:
     counts = Counter(event.kind for event in run.events)
     visible_key_events = [event for event in run.events if event.kind in IMPORTANT_KINDS]
     lines = [
-        f"# Incident Summary: {run.run_id}",
+        f"Incident Summary: {run.run_id}",
+        "===============================",
         "",
-        f"- agent: {run.agent or 'unknown'}",
-        f"- session_id: {run.session_id or 'unknown'}",
-        f"- total events: {run.event_count}",
+        f"agent: {run.agent or 'unknown'}",
+        f"session: {run.session_id or 'unknown'}",
+        f"events: {run.event_count}",
     ]
     if compact:
         filtered_counts = Counter(event.kind for event in run.events if event.kind in COMPACT_SKIP_EVENT_KINDS)
         lines.extend([
-            f"- key events: {len(visible_key_events)}",
-            f"- omitted events: {sum(filtered_counts.values())}",
+            f"key events: {len(visible_key_events)}",
+            f"filtered events: {sum(filtered_counts.values())}",
         ])
         if filtered_counts:
             detail = ", ".join(f"{kind}={count}" for kind, count in sorted(filtered_counts.items()))
-            lines.append(f"- omitted detail: {detail}")
-    lines.extend(["", "## Event Counts"])
+            lines.append(f"filtered detail: {detail}")
+    lines.extend(["", "Event Counts", "------------"])
 
     event_count_items = sorted((counts.items() if not compact else ((kind, count) for kind, count in counts.items() if kind not in COMPACT_SKIP_EVENT_KINDS)))
     for kind, count in event_count_items:
         lines.append(f"- {kind}: {count}")
 
-    lines.extend(["", "## Key Events"])
+    lines.extend(["", "Key Events", "----------"])
 
     for event in visible_key_events:
         lines.append(f"- [{event.ts}] {event.kind} ({event.source}) {_event_detail(event.kind, event.data, compact=compact)}".rstrip())
@@ -58,6 +59,8 @@ def _event_detail(kind: str, data: dict[str, Any], compact: bool = False) -> str
         return ""
     parts = []
     for key in ["tool", "tool_call_id", "arguments", "status", "is_error", "message", "content", "details", "command", "path", "name"]:
+        if compact and key == "tool_call_id":
+            continue
         value = data.get(key)
         if value is not None:
             parts.append(f"{key}={_render_value(kind, key, value, compact=compact)}")

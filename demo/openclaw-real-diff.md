@@ -1,18 +1,20 @@
-focused run diff
-- left: 5522c802-eade-41d5-b67c-0179806b11bf
-- right: 30572a54-78c4-4756-be4b-dfb18b1ccac5
+Focused Diff
+============
 
-summary:
-- left visible events: 16
-- right visible events: 40
-- left focus events: 16
-- right focus events: 40
-- prompt match: yes
-- shared tools: cron, message, read, sessions_list
-- left-only tools: update_plan
-- right-only tools: exec, process
+left:  5522c802-eade-41d5-b67c-0179806b11bf
+right: 30572a54-78c4-4756-be4b-dfb18b1ccac5
 
-key differences:
+Overview
+--------
+left shown events:  16
+right shown events: 40
+prompt match: yes
+shared tools: cron, message, read, sessions_list
+left-only tools: update_plan
+right-only tools: exec, process
+
+Key Differences
+---------------
 - both runs reach a Discord message edit step
 - right run explores more steps before completion (40 vs 16)
 - tool usage differs for exec (0 vs 9)
@@ -21,18 +23,17 @@ key differences:
 - tool usage differs for sessions_list (1 vs 2)
 - tool usage differs for update_plan (3 vs 0)
 
-focus event preview:
-- left:
-  - [2026-04-14T12:34:45.292Z] prompt (user) | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMPORTANT: When calling the message tool wi...
+Preview
+-------
+left:
+  - [2026-04-14T12:34:45.292Z] prompt (user) | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMP...
   - [2026-04-14T12:34:50.738Z] tool_call (assistant) | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
-  - [2026-04-14T12:34:50.742Z] tool_result (read) | tool=read, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "emoji": "🎮", "requires": { "config": ["cha...
-  - [2026-04-14T12:34:57.546Z] tool_call (assistant) | tool=update_plan, arguments={plan=[{'step': 'Check local cron jobs and recent session activ...}
+  - [2026-04-14T12:34:50.742Z] tool_result (read) | tool=read, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "em...
+  - [2026-04-14T12:34:57.546Z] tool_call (assistant) | tool=update_plan, arguments={plan=[{'step': 'Check local cron jobs and recent s...}
   - [2026-04-14T12:34:57.550Z] tool_result (update_plan) | tool=update_plan, is_error=False, content=Plan updated., details={status=updated}
-  - [2026-04-14T12:34:59.887Z] tool_call (assistant) | tool=cron, arguments={action=list}
-- right:
-  - [2026-04-14T12:32:46.636Z] prompt (user) | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMPORTANT: When calling the message tool wi...
+right:
+  - [2026-04-14T12:32:46.636Z] prompt (user) | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMP...
   - [2026-04-14T12:32:50.870Z] tool_call (assistant) | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
-  - [2026-04-14T12:32:50.874Z] tool_result (read) | tool=read, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "emoji": "🎮", "requires": { "config": ["cha...
+  - [2026-04-14T12:32:50.874Z] tool_result (read) | tool=read, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "em...
   - [2026-04-14T12:32:55.290Z] tool_call (assistant) | tool=cron, arguments={action=list}
   - [2026-04-14T12:32:55.290Z] tool_call (assistant) | tool=sessions_list, arguments={activeMinutes=120, limit=100, messageLimit=1}
-  - [2026-04-14T12:32:55.429Z] tool_result (cron) | tool=cron, is_error=False, content={\n  "jobs": [\n    {\n      "id": "bb948795-87a9-4a64-af5a-6c71ef93f3c6",\n      "name": "Mission control live status updater",\n      "enabled": true,\n   ..., details={jobs=[8 jobs]}

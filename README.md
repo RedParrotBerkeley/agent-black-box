@@ -72,6 +72,7 @@ PYTHONPATH=src python -m agent_black_box.cli timeline examples/openclaw_trace.js
 PYTHONPATH=src python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact
 PYTHONPATH=src python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact --output incident.md
 PYTHONPATH=src python -m agent_black_box.cli diff ~/.openclaw/agents/main/sessions/<run-a>.jsonl ~/.openclaw/agents/main/sessions/<run-b>.jsonl --format openclaw-jsonl --compact --focus
+./scripts/demo-gif-sequence.sh
 ```
 
 ## Real OpenClaw example
@@ -83,11 +84,11 @@ You can also view the same excerpt in `assets/openclaw-real-snippet.txt` for eas
 ```text
 run_id: 5522c802-eade-41d5-b67c-0179806b11bf
 agent: openclaw
-session_id: 5522c802-eade-41d5-b67c-0179806b11bf
-events: 23
-visible_events: 16
+events: 16 shown / 23 total
+view: compact
 
-timeline:
+Timeline
+--------
 01. [2026-04-14T12:34:45.292Z] prompt (user)  | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message...
 02. [2026-04-14T12:34:50.738Z] tool_call (assistant)  | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
 03. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=cron, arguments={action=list}
@@ -96,7 +97,7 @@ timeline:
 06. [2026-04-14T12:35:16.293Z] tool_result (message)  | tool=message, is_error=False, details={ok=True}
 07. [2026-04-14T12:35:22.511Z] assistant_message (assistant)  | message=NO_REPLY
 
-omitted_events: 7 (assistant_thinking=3, model-snapshot=1, model_change=1, session_start=1, thinking_level_change=1)
+filtered: 7 event(s) (assistant_thinking=3, model-snapshot=1, model_change=1, session_start=1, thinking_level_change=1)
 ```
 
 Full generated demo artifacts live in `demo/`:

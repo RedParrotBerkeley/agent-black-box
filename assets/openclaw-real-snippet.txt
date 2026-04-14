@@ -1,18 +1,18 @@
 run_id: 5522c802-eade-41d5-b67c-0179806b11bf
 agent: openclaw
-session_id: 5522c802-eade-41d5-b67c-0179806b11bf
-events: 23
-visible_events: 16
+events: 16 shown / 23 total
+view: compact
 
-timeline:
-01. [2026-04-14T12:34:45.292Z] prompt (user)  | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMPORTANT: When calling the message tool wi...
-02. [2026-04-14T12:34:50.738Z] tool_call (assistant)  | tool=read, tool_call_id=call_YdH9l9ViyjEnbUXDCgRLTcbC|fc_056baf748cf1c2990169de346aa5608193a4581ea705aef7f2, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
-03. [2026-04-14T12:34:50.742Z] tool_result (read)  | tool=read, tool_call_id=call_YdH9l9ViyjEnbUXDCgRLTcbC|fc_056baf748cf1c2990169de346aa5608193a4581ea705aef7f2, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "emoji": "🎮", "requires": { "config": ["cha...
-04. [2026-04-14T12:34:57.546Z] tool_call (assistant)  | tool=update_plan, tool_call_id=call_hEE79U24ojTw4ebc4H1AFpiN|fc_056baf748cf1c2990169de34719084819396f62efc42f009f4, arguments={plan=[{'step': 'Check local cron jobs and recent session activ...}
-05. [2026-04-14T12:34:57.550Z] tool_result (update_plan)  | tool=update_plan, tool_call_id=call_hEE79U24ojTw4ebc4H1AFpiN|fc_056baf748cf1c2990169de34719084819396f62efc42f009f4, is_error=False, content=Plan updated., details={status=updated}
-06. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=cron, tool_call_id=call_PG6wHqygngpkCUYQ4g4YWX5D|fc_056baf748cf1c2990169de3473f0108193b43b8ca1b6f53c33, arguments={action=list}
-07. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=sessions_list, tool_call_id=call_DxKlxhKoffqc0P2dD1bzBN4V|fc_056baf748cf1c2990169de3473f024819398d5e1485b306672, arguments={activeMinutes=180, limit=100, messageLimit=1}
-08. [2026-04-14T12:35:00.031Z] tool_result (cron)  | tool=cron, tool_call_id=call_PG6wHqygngpkCUYQ4g4YWX5D|fc_056baf748cf1c2990169de3473f0108193b43b8ca1b6f53c33, is_error=False, content={\n  "jobs": [\n    {\n      "id": "bb948795-87a9-4a64-af5a-6c71ef93f3c6",\n      "name": "Mission control live status updater",\n      "enabled": true,\n   ..., details={jobs=[8 jobs]}
-09. [2026-04-14T12:35:00.207Z] tool_result (sessions_list)  | tool=sessions_list, tool_call_id=call_DxKlxhKoffqc0P2dD1bzBN4V|fc_056baf748cf1c2990169de3473f024819398d5e1485b306672, is_error=False, content={\n  "count": 1,\n  "sessions": [\n    {\n      "key": "agent:main:cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6",\n      "kind": "other",\n      "channel": "hea..., details={count=1}
-10. [2026-04-14T12:35:10.940Z] tool_call (assistant)  | tool=update_plan, tool_call_id=call_y1skjJCzFZKkAj0tULNQeuoR|fc_056baf748cf1c2990169de347ef71881939b1fa2047860f32b, arguments={plan=[{'step': 'Check local cron jobs and recent session activ...}
-11. [2026-04-14T12:35:10.943Z] tool_result (update_plan)  | tool=update_plan, tool_call_id=call_y1skjJCzFZKkAj0tULNQeuoR|fc_056baf748cf1c2990169de347ef71881939b1fa2047860f32b, is_error=False, content=Plan updated., details={status=updated}
+Timeline
+--------
+01. [2026-04-14T12:34:45.292Z] prompt (user)  | message=[cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6 Mission control live status updater] Edit an existing Discord message. IMP...
+02. [2026-04-14T12:34:50.738Z] tool_call (assistant)  | tool=read, arguments={path=/opt/homebrew/lib/node_modules/openclaw/skills/discord/SKILL.md}
+03. [2026-04-14T12:34:50.742Z] tool_result (read)  | tool=read, is_error=False, content=---\nname: discord\ndescription: "Discord ops via the message tool (channel=discord)."\nmetadata: { "openclaw": { "em...
+04. [2026-04-14T12:34:57.546Z] tool_call (assistant)  | tool=update_plan, arguments={plan=[{'step': 'Check local cron jobs and recent s...}
+05. [2026-04-14T12:34:57.550Z] tool_result (update_plan)  | tool=update_plan, is_error=False, content=Plan updated., details={status=updated}
+06. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=cron, arguments={action=list}
+07. [2026-04-14T12:34:59.887Z] tool_call (assistant)  | tool=sessions_list, arguments={activeMinutes=180, limit=100, messageLimit=1}
+08. [2026-04-14T12:35:00.031Z] tool_result (cron)  | tool=cron, is_error=False, content={\n  "jobs": [\n    {\n      "id": "bb948795-87a9-4a64-af5a-6c71ef93f3c6",\n      "name": "Mission control live statu..., details={jobs=[8 jobs]}
+09. [2026-04-14T12:35:00.207Z] tool_result (sessions_list)  | tool=sessions_list, is_error=False, content={\n  "count": 1,\n  "sessions": [\n    {\n      "key": "agent:main:cron:bb948795-87a9-4a64-af5a-6c71ef93f3c6",\n     ..., details={count=1}
+10. [2026-04-14T12:35:10.940Z] tool_call (assistant)  | tool=update_plan, arguments={plan=[{'step': 'Check local cron jobs and recent s...}
+11. [2026-04-14T12:35:10.943Z] tool_result (update_plan)  | tool=update_plan, is_error=False, content=Plan updated., details={status=updated}

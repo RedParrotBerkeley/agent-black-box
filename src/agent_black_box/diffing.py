@@ -20,19 +20,20 @@ def diff_runs(left: TraceRun, right: TraceRun, compact: bool = False, focus: boo
     if focus:
         return _render_focused_diff(left, right, left_events, right_events, compact=compact)
 
-    left_label = f"{len(left_events)} visible events, {left.event_count} total" if compact else f"{left.event_count} events"
-    right_label = f"{len(right_events)} visible events, {right.event_count} total" if compact else f"{right.event_count} events"
+    left_label = f"{len(left_events)} shown / {left.event_count} total" if compact else f"{left.event_count} events"
+    right_label = f"{len(right_events)} shown / {right.event_count} total" if compact else f"{right.event_count} events"
     lines = [
-        "run diff",
-        f"- left: {left.run_id} ({left_label})",
-        f"- right: {right.run_id} ({right_label})",
+        "Run Diff",
+        "--------",
+        f"left:  {left.run_id} ({left_label})",
+        f"right: {right.run_id} ({right_label})",
         "",
     ]
 
     max_len = max(len(left_events), len(right_events))
     differences = 0
     first_divergence = None
-    event_word = "visible event" if compact else "event"
+    event_word = "shown event" if compact else "event"
 
     for idx in range(max_len):
         left_event = left_events[idx] if idx < len(left_events) else None
@@ -56,11 +57,12 @@ def diff_runs(left: TraceRun, right: TraceRun, compact: bool = False, focus: boo
         return "\n".join(lines).rstrip()
 
     summary = [
-        f"summary: {differences} difference(s) detected",
+        f"summary: {differences} difference(s)",
         f"first divergence: {event_word} {first_divergence}",
+        "",
     ]
 
-    return "\n".join(summary + [""] + lines).rstrip()
+    return "\n".join(lines[:4] + summary + lines[4:]).rstrip()
 
 
 def _render_focused_diff(left: TraceRun, right: TraceRun, left_events, right_events, compact: bool) -> str:
@@ -72,36 +74,35 @@ def _render_focused_diff(left: TraceRun, right: TraceRun, left_events, right_eve
     right_focus = [event for event in right_events if event.kind in IMPORTANT_FOCUS_KINDS]
 
     lines = [
-        "focused run diff",
-        f"- left: {left.run_id}",
-        f"- right: {right.run_id}",
+        "Focused Diff",
+        "============",
         "",
-        "summary:",
-        f"- left visible events: {len(left_events)}",
-        f"- right visible events: {len(right_events)}",
-        f"- left focus events: {len(left_focus)}",
-        f"- right focus events: {len(right_focus)}",
+        f"left:  {left.run_id}",
+        f"right: {right.run_id}",
+        "",
+        "Overview",
+        "--------",
+        f"left shown events:  {len(left_events)}",
+        f"right shown events: {len(right_events)}",
+        f"prompt match: {'yes' if _normalized_prompt_text(left_prompt) == _normalized_prompt_text(right_prompt) else 'no'}",
     ]
-
-    same_prompt = _normalized_prompt_text(left_prompt) == _normalized_prompt_text(right_prompt)
-    lines.append(f"- prompt match: {'yes' if same_prompt else 'no'}")
 
     shared_tools = sorted(set(left_tools) & set(right_tools))
     left_only_tools = sorted(set(left_tools) - set(right_tools))
     right_only_tools = sorted(set(right_tools) - set(left_tools))
-    lines.append(f"- shared tools: {', '.join(shared_tools) if shared_tools else 'none'}")
+    lines.append(f"shared tools: {', '.join(shared_tools) if shared_tools else 'none'}")
     if left_only_tools:
-        lines.append(f"- left-only tools: {', '.join(left_only_tools)}")
+        lines.append(f"left-only tools: {', '.join(left_only_tools)}")
     if right_only_tools:
-        lines.append(f"- right-only tools: {', '.join(right_only_tools)}")
+        lines.append(f"right-only tools: {', '.join(right_only_tools)}")
 
-    lines.extend(["", "key differences:"])
+    lines.extend(["", "Key Differences", "---------------"])
     for bullet in _focused_bullets(left_events, right_events):
         lines.append(f"- {bullet}")
 
-    lines.extend(["", "focus event preview:"])
-    for label, events in [("left", left_focus[:6]), ("right", right_focus[:6])]:
-        lines.append(f"- {label}:")
+    lines.extend(["", "Preview", "-------"])
+    for label, events in [("left", left_focus[:5]), ("right", right_focus[:5])]:
+        lines.append(f"{label}:")
         for event in events:
             lines.append(f"  - {_format_event(event, compact=compact)}")
 
@@ -200,6 +201,8 @@ def _format_data(kind: str, data: dict[str, Any], compact: bool = False) -> str:
 
     parts: list[str] = []
     for key in PREFERRED_DIFF_KEYS:
+        if compact and key == "tool_call_id":
+            continue
         value = data.get(key)
         if value is not None and (not compact or key not in COMPACT_IGNORE_DATA_KEYS):
             parts.append(f"{key}={_render_value(kind, key, value, compact=compact)}")
