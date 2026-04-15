@@ -22,3 +22,16 @@ Agent Black Box is built around a simple pipeline:
 - event classification by category
 - run-to-run diffing
 - adapter layer for source-specific traces
+
+## Companion-service direction
+
+A likely v2 direction is to keep Agent Black Box core focused on ingest, normalization, diffing, and incident artifact generation, while building live operational surfaces as separate companion services.
+
+The clearest candidate is a Discord incident relay:
+- watch traces or runtime events in near real time
+- detect failures, regressions, or policy-triggering runs
+- post short incident summaries into a private allowlisted Discord ops room
+- optionally attach or link a rendered report bundle
+- optionally compare a failing run against the last known good run
+
+Important design choice: this should live outside the core repository as a companion integration unless the core API boundary becomes stable enough to justify first-party packaging. The core product should remain the black-box engine; live chat surfaces should sit on top of it.
