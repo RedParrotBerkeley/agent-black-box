@@ -13,7 +13,7 @@ def test_render_incident_summary_smoke(tmp_path):
     run = parse_jsonl_trace(trace)
     rendered = render_incident_summary(run)
 
-    assert "# Incident Summary: r1" in rendered
+    assert "Incident Summary: r1" in rendered
     assert "tool_result: 1" in rendered
     assert "completion: 1" in rendered
     assert "message=bad" in rendered
@@ -62,11 +62,11 @@ def test_render_incident_summary_compact_adds_compact_metadata(tmp_path):
     full = render_incident_summary(run)
     compact = render_incident_summary(run, compact=True)
 
-    assert "- key events:" not in full
-    assert "- omitted events:" not in full
-    assert "- omitted detail:" not in full
-    assert "- key events:" in compact
-    assert "- omitted events: 2" in compact
-    assert "- omitted detail: assistant_thinking=1, session_start=1" in compact
+    assert "key events:" not in full
+    assert "filtered events:" not in full
+    assert "filtered detail:" not in full
+    assert "key events: 1" in compact
+    assert "filtered events: 2" in compact
+    assert "filtered detail: assistant_thinking=1, session_start=1" in compact
     assert "- assistant_thinking:" not in compact
     assert "- session_start:" not in compact

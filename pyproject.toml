@@ -9,8 +9,27 @@ description = "Flight recorder, replay, and diff tooling for AI agent runs"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Mike Patraw" }]
-license = { text = "MIT" }
+license = "MIT"
 dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Software Development :: Debuggers",
+  "Topic :: Software Development :: Testing",
+]
+
+[project.urls]
+Homepage = "https://github.com/RedParrotBerkeley/agent-black-box"
+Repository = "https://github.com/RedParrotBerkeley/agent-black-box"
+Issues = "https://github.com/RedParrotBerkeley/agent-black-box/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.11",
+]
 
 [project.scripts]
 abb = "agent_black_box.cli:main"

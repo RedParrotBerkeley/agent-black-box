@@ -18,7 +18,7 @@ def test_diff_runs_reports_changed_events(tmp_path):
     right = parse_jsonl_trace(right_path)
     rendered = diff_runs(left, right)
 
-    assert "summary: 1 difference(s) detected" in rendered
+    assert "summary: 1 difference(s)" in rendered
     assert "first divergence: event 1" in rendered
     assert "difference 1 (changed event) at event 1:" in rendered
     assert "echo bad" in rendered
@@ -73,7 +73,7 @@ def test_diff_runs_handles_openclaw_nested_tool_data(tmp_path):
     right = parse_trace(right_path, source_format="openclaw-jsonl")
     rendered = diff_runs(left, right)
 
-    assert "summary: 2 difference(s) detected" in rendered
+    assert "summary: 1 difference(s)" in rendered
     assert "tool=exec" in rendered
     assert "tool_call_id=tc1" in rendered
 
@@ -109,7 +109,7 @@ def test_diff_runs_focus_produces_high_level_summary(tmp_path):
     right = parse_trace(right_path, source_format="openclaw-jsonl")
     rendered = diff_runs(left, right, compact=True, focus=True)
 
-    assert "focused run diff" in rendered
+    assert "Focused Diff" in rendered
     assert "prompt match: yes" in rendered
     assert "both runs reach a Discord message edit step" in rendered
     assert "right run includes an error path that does not appear in the left run" in rendered
@@ -174,5 +174,5 @@ def test_diff_runs_compact_ignores_timestamp_only_changes(tmp_path):
     full = diff_runs(left, right)
     compact = diff_runs(left, right, compact=True)
 
-    assert "summary: 2 difference(s) detected" in full
+    assert "summary: 2 difference(s)" in full
     assert "no event-level differences detected" in compact

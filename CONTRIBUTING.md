@@ -15,10 +15,17 @@ Right now the project is in early MVP mode. The highest-value contributions are:
 ## Development
 
 ```bash
-python3.13 -m venv .venv
+uv sync --extra dev
+uv run pytest -q
+```
+
+If you prefer plain venv + pip:
+
+```bash
+python3.11 -m venv .venv
 . .venv/bin/activate
-python -m pip install pytest
-PYTHONPATH=src pytest -q
+python -m pip install -e .[dev]
+pytest -q
 ```
 
 ## Ground rules
@@ -28,3 +35,4 @@ PYTHONPATH=src pytest -q
 - do not add surveillance-y defaults or secret-leaking behavior
 - local-first by default
 - every new adapter should come with a fixture or example trace
+- keep docs and demo artifacts aligned with the current CLI output

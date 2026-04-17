@@ -40,53 +40,59 @@ Current MVP features:
 - render a timeline of a run
 - compare runs with raw event diff or focused diff summary modes
 - export an incident-style markdown summary
+- generate static HTML reports
 - filter events by kind
 - redact common secret-bearing fields
 - write output to files for sharing
 
 ## Quick demo
 
-If you only look at one thing, look at the HTML report and the real OpenClaw example below. That is the closest thing to the product's actual wedge right now.
+If you only look at one thing, look at the HTML report below. That is the closest thing to the product's actual wedge right now.
 
 ## Flagship artifact
 
-The most product-like demo surfaces right now are the static HTML reports:
-- `demo/openclaw-real-report.html`
+The most product-like demo surface right now is the static HTML failure report:
 - `demo/openclaw-failure-report.html`
 
-The real-run report shows a full operational OpenClaw session. The failure report is the more dramatic artifact: a compact black-box record of an agent hitting a failing `pytest` run and surfacing the error path cleanly.
+It is a compact black-box record of an agent hitting a failing `pytest` run and surfacing the error path cleanly.
 
 ### Timeline
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli timeline examples/sample_trace.jsonl --redact --banner
+uv run --python 3.11 python -m agent_black_box.cli timeline examples/sample_trace.jsonl --redact --banner
 ```
 
 ### Diff two runs
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl
-PYTHONPATH=src python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl --focus
+uv run --python 3.11 python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl
+uv run --python 3.11 python -m agent_black_box.cli diff examples/sample_trace.jsonl examples/sample_trace_fixed.jsonl --focus
 ```
 
 ### Export incident summary
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli summary examples/sample_trace.jsonl --redact --output incident.md
+uv run --python 3.11 python -m agent_black_box.cli summary examples/sample_trace.jsonl --redact --output incident.md
+```
+
+### Generate a static HTML report
+
+```bash
+uv run --python 3.11 python -m agent_black_box.cli report demo/openclaw-failure-trace.jsonl --format openclaw-jsonl --compact --redact --output report.html
 ```
 
 ### Parse an OpenClaw-flavored trace
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli timeline examples/openclaw_trace.jsonl --format openclaw-jsonl
+uv run --python 3.11 python -m agent_black_box.cli timeline examples/openclaw_trace.jsonl --format openclaw-jsonl
 ```
 
 ### Parse a real OpenClaw session
 
 ```bash
-PYTHONPATH=src python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact
-PYTHONPATH=src python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact --output incident.md
-PYTHONPATH=src python -m agent_black_box.cli diff ~/.openclaw/agents/main/sessions/<run-a>.jsonl ~/.openclaw/agents/main/sessions/<run-b>.jsonl --format openclaw-jsonl --compact --focus
+uv run --python 3.11 python -m agent_black_box.cli timeline ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact
+uv run --python 3.11 python -m agent_black_box.cli summary ~/.openclaw/agents/main/sessions/<session>.jsonl --format openclaw-jsonl --compact --output incident.md
+uv run --python 3.11 python -m agent_black_box.cli diff ~/.openclaw/agents/main/sessions/<run-a>.jsonl ~/.openclaw/agents/main/sessions/<run-b>.jsonl --format openclaw-jsonl --compact --focus
 ./scripts/demo-gif-sequence.sh
 ```
 
@@ -117,9 +123,10 @@ agent: openclaw
 session_id: sess-123
 events: 2
 
-timeline:
-01. [2026-04-13T22:00:03Z] tool_result (github)  | status=failure, message=Validate PR Title failed
-02. [2026-04-13T22:00:09Z] command (shell)  | command=gh pr edit 198 --title 'chore(llm): relax litellm version cap'
+Timeline
+--------
+01. [2026-04-13T22:00:03Z] tool_result (github) | status=failure, message=Validate PR Title failed
+02. [2026-04-13T22:00:09Z] command (shell) | command=gh pr edit 198 --title 'chore(llm): relax litellm version cap'
 ```
 
 ## What Agent Black Box Is
@@ -158,9 +165,15 @@ agent-black-box/
   LICENSE
   CONTRIBUTING.md
   SECURITY.md
+  assets/
+  demo/
   docs/
     architecture.md
+    demo-script.md
+    exposure-copy.md
     faq.md
+    hn-package.md
+    hn-screenshot-workflow.md
     launch-plan.md
     quickstart.md
     roadmap.md
@@ -169,18 +182,31 @@ agent-black-box/
     sample_trace.jsonl
     sample_trace_fixed.jsonl
     openclaw_trace.jsonl
+  scripts/
+    build-demo-report.py
+    demo-gif-sequence.sh
+    hn-screenshot-pack.sh
   src/
     agent_black_box/
       adapters.py
+      banner.py
       cli.py
       diffing.py
       filtering.py
+      html_report.py
       models.py
       parser.py
       redaction.py
       reporting.py
       timeline.py
   tests/
+```
+
+## Development
+
+```bash
+uv sync --extra dev
+uv run pytest -q
 ```
 
 ## Quickstart
@@ -204,7 +230,7 @@ See:
 
 This is an early MVP being shaped into a public open source release.
 
-It already has a real CLI and a real trace model, and it now supports real OpenClaw session traces, compact views, and focused diff summaries, but the strongest next steps are:
+It already has a real CLI and a real trace model, and it now supports real OpenClaw session traces, compact views, focused diff summaries, and static HTML reports. The strongest next steps are still:
 - better diff alignment and first-bad-step detection
 - replay support
 - root-cause hints

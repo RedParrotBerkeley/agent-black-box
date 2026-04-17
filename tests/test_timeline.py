@@ -68,8 +68,7 @@ def test_render_timeline_compact_omits_setup_and_thinking_events(tmp_path):
     assert "assistant_thinking" in full
     assert "visible_events:" not in full
     assert "01. [2026-04-14T12:00:00Z] session_start" not in compact
-    assert "model_change" not in compact
-    assert "thinking_level_change" not in compact
     assert "01. [2026-04-14T12:00:01Z] assistant_thinking" not in compact
-    assert "visible_events: 1" in compact
-    assert "omitted_events: 4 (assistant_thinking=1, model_change=1, session_start=1, thinking_level_change=1)" in compact
+    assert "events: 1 shown / 5 total" in compact
+    assert "view: compact" in compact
+    assert "filtered: 4 event(s) (assistant_thinking=1, model_change=1, session_start=1, thinking_level_change=1)" in compact
