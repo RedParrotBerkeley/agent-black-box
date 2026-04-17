@@ -100,7 +100,7 @@ def main() -> int:
         diff = diff_runs(run, compare_run, compact=args.compact, focus=True) if compare_run else "No comparison run provided."
         title = args.title or f"Agent Black Box Report · {run.run_id}"
         subtitle = args.subtitle or "Static black-box report for a real agent run, designed for inspection, sharing, and demo readability."
-        output = render_html_report(title=title, subtitle=subtitle, timeline=timeline, summary=summary, diff=diff)
+        output = render_html_report(title=title, subtitle=subtitle, timeline=timeline, summary=summary, diff=diff, run=run, compare_run=compare_run)
         _emit(output, args.output)
         return 0
 
