@@ -243,3 +243,8 @@ It already has a real CLI and a real trace model, and it now supports real OpenC
 - **Core capability:** Flight recorder, replay, diff, and incident reporting for tool-using AI agents.
 - **Primary stack:** Python CLI + run telemetry artifacts.
 - **Status:** Active MVP with OpenClaw-compatible trace support.
+
+
+## Related projects
+
+- [rx-guard](https://github.com/mikepatraw/rx-guard) — FHIR-aware prescribing safety agent.\n- [WatchClaw](https://github.com/mikepatraw/WatchClaw) — OpenClaw repo scanner for risky patterns.\n- [Fredsidian](https://github.com/mikepatraw/Fredsidian) — trusted + markdown memory architecture.
