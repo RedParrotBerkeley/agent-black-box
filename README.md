@@ -235,3 +235,11 @@ It already has a real CLI and a real trace model, and it now supports real OpenC
 - replay support
 - root-cause hints
 - a web UI
+
+
+## Portfolio snapshot
+
+- **Problem:** Agent runs are difficult to debug when only chat logs are available.
+- **Core capability:** Flight recorder, replay, diff, and incident reporting for tool-using AI agents.
+- **Primary stack:** Python CLI + run telemetry artifacts.
+- **Status:** Active MVP with OpenClaw-compatible trace support.
